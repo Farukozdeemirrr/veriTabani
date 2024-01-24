@@ -18,6 +18,13 @@ namespace diyetApp
 
         MySqlConnection connection;
         string connectionString = "Server=localhost;Database=diyetisyensql;Uid=root;Pwd=;";
+        private object programAciklamasi;
+        private object bitisTarihi;
+        private object diyetProgramiID;
+        private object musteriID;
+        private object besinID;
+        private object baslangicTarihi;
+
         public Form2()
         {
             InitializeComponent();
@@ -29,10 +36,10 @@ namespace diyetApp
 
             try
             {
-                // Bağlantıyı açın
+               
                 connection.Open();
                 MessageBox.Show("Veritabanına başarıyla bağlandı!");
-                // Burada veritabanına bağlandığınızı doğrulamak için bir bildirim gösterilebilir.
+                
                 listeAra("SELECT * FROM diyetprogramlari");
             }
             catch (Exception ex)
@@ -58,7 +65,7 @@ namespace diyetApp
             {
 
                 MySqlCommand cmd = new MySqlCommand(sorgu, connection);
-                cmd.ExecuteNonQuery(); // Sorguyu çalıştır
+                cmd.ExecuteNonQuery(); 
                 MessageBox.Show("İşlem başarılı");
             }
             catch (Exception ex)
@@ -67,7 +74,7 @@ namespace diyetApp
             }
             finally
             {
-                connection.Close(); // Bağlantıyı kapat
+                connection.Close(); 
             }
         }
 
@@ -95,5 +102,64 @@ namespace diyetApp
         {
 
         }
+
+        private void sil_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection("your_connection_string_here"))
+                {
+                    connection.Open();
+
+                    string deleteQuery = "DELETE FROM DiyetProgramlari WHERE DiyetProgramiID = @DiyetProgramiID";
+
+                    using (MySqlCommand cmd = new MySqlCommand(deleteQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DiyetProgramiID", Convert.ToInt32(diyetProgramiID));
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Diyet programı başarıyla silindi.");
+
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Silme hatası: " + ex.Message);
+            }
+        }
+
+        private void güncelle_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection("your_connection_string_here"))
+                {
+                    connection.Open();
+
+                    string updateQuery = "UPDATE DiyetProgramlari SET MusteriID = @MusteriID, BesinID = @BesinID, BaslangicTarihi = @BaslangicTarihi, BitisTarihi = @BitisTarihi, ProgramAciklamasi = @ProgramAciklamasi WHERE DiyetProgramiID = @DiyetProgramiID";
+
+                    using (MySqlCommand cmd = new MySqlCommand(updateQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DiyetProgramiID", Convert.ToInt32(diyetProgramiID)); 
+                        cmd.Parameters.AddWithValue("@MusteriID", Convert.ToInt32(musteriID));
+                        cmd.Parameters.AddWithValue("@BesinID", Convert.ToInt32(besinID)); 
+                        cmd.Parameters.AddWithValue("@BaslangicTarihi", Convert.ToDateTime(baslangicTarihi)); 
+                        cmd.Parameters.AddWithValue("@BitisTarihi", bitisTarihi); 
+                        cmd.Parameters.AddWithValue("@ProgramAciklamasi", programAciklamasi); 
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Diyet programı başarıyla güncellendi.");
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Güncelleme hatası: " + ex.Message);
+            }
+        }
+
     }
 }

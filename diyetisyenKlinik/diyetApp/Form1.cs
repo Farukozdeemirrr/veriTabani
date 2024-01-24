@@ -134,10 +134,11 @@ namespace diyetApp
                 {
                     
                     int selectedRowIndex = dataGridView1.SelectedRows[0].Index;
-                    int musteriIsim = Convert.ToInt32(dataGridView1.Rows[selectedRowIndex].Cells["Isim"].Value);
+                    string musteriIsim = dataGridView1.Rows[selectedRowIndex].Cells["Isim"].Value.ToString();
 
-                   
-                  //  musteriSil(musteriIsim);
+
+
+                    musteriSil(musteriIsim);
 
                
                     listeAra("SELECT * FROM musteriler");
@@ -146,6 +147,46 @@ namespace diyetApp
                 {
                     MessageBox.Show("Lütfen silmek istediğiniz müşteriyi seçin.");
                 }
+            }
+        }
+
+        private void musteriSil(String musteriIsim)
+        {
+
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+
+                DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
+                int musteriID = Convert.ToInt32(selectedRow.Cells["MusteriID"].Value);
+
+
+                try
+                {
+                    using (MySqlCommand cmd = new MySqlCommand("MusteriSil", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@p_MusteriID", musteriID);
+
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Müşteri başarıyla silindi.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Müşteri silme hatası: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+
+                dataGridView1.Rows.Remove(selectedRow);
+            }
+            else
+            {
+                MessageBox.Show("Lütfen silinecek bir müşteri seçin.");
             }
         }
 
@@ -188,7 +229,7 @@ namespace diyetApp
             }
             finally
             {
-                connection.Close();  // Bağlantıyı kapatın
+                connection.Close(); 
             }
         }
 

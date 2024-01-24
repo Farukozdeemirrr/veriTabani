@@ -25,10 +25,10 @@ namespace diyetApp
 
             try
             {
-                // Bağlantıyı açın
+               
                 connection.Open();
                 MessageBox.Show("Veritabanına başarıyla bağlandı!");
-                // Burada veritabanına bağlandığınızı doğrulamak için bir bildirim gösterilebilir.
+               
                 listeAra("SELECT * FROM besinler");
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace diyetApp
             {
 
                 MySqlCommand cmd = new MySqlCommand(sorgu, connection);
-                cmd.ExecuteNonQuery(); // Sorguyu çalıştır
+                cmd.ExecuteNonQuery(); 
                 MessageBox.Show("İşlem başarılı");
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace diyetApp
             }
             finally
             {
-                connection.Close(); // Bağlantıyı kapat
+                connection.Close(); 
             }
         }
         
@@ -76,10 +76,93 @@ namespace diyetApp
 
         private void ekle_Click_1(object sender, EventArgs e)
         {
-            string insertQuery = "INSERT INTO diyetprogramlari (BesinAdi, KaloriMiktari, Karbonhidrat,Protein,Yag) VALUES ('" + besinAdi.Text + "','" + kaloriMiktari.Text + "','" + karbonhidrat.Text + "','" + protein.Text + "','" + yag.Text + "')";
-            ESG(insertQuery);
-            
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection("your_connection_string_here"))
+                {
+                    connection.Open();
+
+                    string insertQuery = "INSERT INTO Besinler (BesinAdi, KaloriMiktari, Karbonhidrat, Protein, Yag) VALUES (@BesinAdi, @KaloriMiktari, @Karbonhidrat, @Protein, @Yag)";
+
+                    using (MySqlCommand cmd = new MySqlCommand(insertQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@BesinAdi", besinAdi.Text);
+                        cmd.Parameters.AddWithValue("@KaloriMiktari", Convert.ToDecimal(kaloriMiktari.Text));
+                        cmd.Parameters.AddWithValue("@Karbonhidrat", Convert.ToDecimal(karbonhidrat.Text));
+                        cmd.Parameters.AddWithValue("@Protein", Convert.ToDecimal(protein.Text));
+                        cmd.Parameters.AddWithValue("@Yag", Convert.ToDecimal(yag.Text));
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Besin başarıyla eklendi.");
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ekleme hatası: " + ex.Message);
+            }
         }
+
+        private void sil_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection("your_connection_string_here"))
+                {
+                    connection.Open();
+
+                    string deleteQuery = "DELETE FROM Besinler WHERE BesinID = @BesinID";
+
+                    using (MySqlCommand cmd = new MySqlCommand(deleteQuery, connection))
+                    {
+                     
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Besin başarıyla silindi.");
+
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Silme hatası: " + ex.Message);
+            }
+        }
+
+        private void güncelle_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection("your_connection_string_here"))
+                {
+                    connection.Open();
+
+                    string updateQuery = "UPDATE Besinler SET BesinAdi = @BesinAdi, KaloriMiktari = @KaloriMiktari, Karbonhidrat = @Karbonhidrat, Protein = @Protein, Yag = @Yag WHERE BesinID = @BesinID";
+
+                    using (MySqlCommand cmd = new MySqlCommand(updateQuery, connection))
+                    {
+                        
+                        cmd.Parameters.AddWithValue("@BesinAdi", besinAdi.Text);
+                        cmd.Parameters.AddWithValue("@KaloriMiktari", Convert.ToDecimal(kaloriMiktari.Text));
+                        cmd.Parameters.AddWithValue("@Karbonhidrat", Convert.ToDecimal(karbonhidrat.Text));
+                        cmd.Parameters.AddWithValue("@Protein", Convert.ToDecimal(protein.Text));
+                        cmd.Parameters.AddWithValue("@Yag", Convert.ToDecimal(yag.Text));
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Besin başarıyla güncellendi.");
+
+                       
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Güncelleme hatası: " + ex.Message);
+            }
+        }
+
 
         private void geri_Click(object sender, EventArgs e)
         {
