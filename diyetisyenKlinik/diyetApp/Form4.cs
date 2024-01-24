@@ -78,7 +78,7 @@ namespace diyetApp
         {
             try
             {
-                using (MySqlConnection connection = new MySqlConnection("your_connection_string_here"))
+                using (MySqlConnection connection = new MySqlConnection("Server=localhost;Database=diyetisyensql;Uid=root;Pwd=;"))
                 {
                     connection.Open();
 
@@ -108,7 +108,7 @@ namespace diyetApp
         {
             try
             {
-                using (MySqlConnection connection = new MySqlConnection("your_connection_string_here"))
+                using (MySqlConnection connection = new MySqlConnection("Server=localhost;Database=diyetisyensql;Uid=root;Pwd=;"))
                 {
                     connection.Open();
 
@@ -135,7 +135,7 @@ namespace diyetApp
         {
             try
             {
-                using (MySqlConnection connection = new MySqlConnection("your_connection_string_here"))
+                using (MySqlConnection connection = new MySqlConnection("Server=localhost;Database=diyetisyensql;Uid=root;Pwd=;"))
                 {
                     connection.Open();
 
